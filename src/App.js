@@ -1,10 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
+import Products from './Components/Products';
+
 
 function App() {
   return (
     
-    <h1>PWW Market</h1>
+    <div>
+    <Products />
+    </div>
   );
 }
 
