@@ -1,41 +1,42 @@
-import React,{useEffect,useState} from 'react';
+import React,{useState} from 'react';
+import { InView } from 'react-intersection-observer';
 import axios from 'axios';
 import '../App.css'
 
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    const [orderStatus,updateOrder] = useState('desc')
+    const [orderStatus,updateOrder] = useState('asc');
+    const [page,setPage] = useState(1)
   
-    useEffect(()=>{
-        axios.get("https://pww-api.herokuapp.com").then((res)=>{
-            console.log('res data', res.data); 
-            let sortedProducts = sortProdcutsByPrice(res.data);
-            setProducts(sortedProducts)
+
+    const onChange= (inView) => {
+        if (inView) {
+     
+            axios.get(`https://pww-api.herokuapp.com?page=${page}&sortBy=price&order=${orderStatus}`).then((res)=>{
+            const newProducts = products.concat(res.data);
+            setProducts(newProducts);
+            setPage(Math.ceil(newProducts.length/6) + 1);
         }).catch((err)=>{
             console.log(err)
         })
-       
-    },[])
+          }
+    }
   
 
-    const sortProdcutsByPrice = (products) => {
-        let sortedProducts = products.sort(function(item1, item2){
-            return orderStatus === "asc" ? item2.price.value - item1.price.value : item1.price.value - item2.price.value;
-        });
-        return sortedProducts;
-    }
+
  
     const onChangeOrder = (event) => {
         updateOrder(event.target.value);
-        let sortedProducts = sortProdcutsByPrice(products);
-        setProducts(sortedProducts)
+        setProducts([]);
+        setPage(1);
     }
 
     return(
         <>
         <h1>List of products</h1>
         <select onChange={onChangeOrder} value={orderStatus}>
+            
             <option value="asc" >Ascending</option>
             <option value="desc" >Descending</option>
         </select>
@@ -59,7 +60,11 @@ const Products = () => {
                 </div>
                 
             </div>
+
         ))}
+        <InView onChange={onChange}>
+            <span />
+        </InView>
         </>
     )
 }
