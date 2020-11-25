@@ -42,10 +42,11 @@ const Products = () => {
     return(
         <div className={darkMode ? "dark-mode":"light-mode"}>
             <nav>
+            <div className="headContainer">
                 <h3>PWW MarketPlace</h3>
-                <div className="buttonContainer">
-                <button onClick={()=>setDarkMode(prevMode => !prevMode)}>Toggle dark/light</button>
                 </div>
+                <button onClick={()=>setDarkMode(prevMode => !prevMode)}>Toggle dark/light</button>
+               
             </nav>
         
         <div className="container">
